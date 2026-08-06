@@ -1,12 +1,17 @@
-import api from "./api";
+import axios from "axios";
 
-export const getDashboardData = async (
-  filename,
-  filters = {}
-) => {
-  const response = await api.get(`/dashboard/${filename}`, {
-    params: filters,
-  });
+const api = axios.create({
+  baseURL: "https://ai-lead-vision-1.onrender.com",
+});
 
-  return response.data;
-};
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+export default api;
